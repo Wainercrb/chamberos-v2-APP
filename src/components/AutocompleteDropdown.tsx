@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -9,50 +9,44 @@ import {
   ActivityIndicator,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useGetProfessionsQuery } from "../services/chamberosAPI";
-import { IProfession } from "../../types";
 import { CONSTANTS } from "../../CONSTANTS";
+import { TAutocompleteDropdownData } from "../../types";
 
 type TArgs = {
-  handleItemClick: (professions: IProfession[]) => void;
+  handleItemClick: (item: TAutocompleteDropdownData) => void;
   placeholder?: string;
   title?: string;
+  selectedItems: TAutocompleteDropdownData[];
+  data: TAutocompleteDropdownData[];
+  labels: string[];
+  error?: string;
+  isLoading: boolean;
 };
 
 export function AutocompleteDropdown({
-  handleItemClick,
-  placeholder = "Search",
+  data,
+  error,
   title,
+  labels,
+  isLoading,
+  placeholder = CONSTANTS.AUTOCOMPLETE_DROPDOWN_PLACEHOLDER,
+  selectedItems,
+  handleItemClick,
 }: TArgs) {
   const [search, setSearch] = useState("");
-  const [selectedItems, setSelectedItems] = useState<IProfession[]>([]);
-  const { data, refetch, isFetching, error } = useGetProfessionsQuery({
-    name: search,
-  });
 
-  useEffect(() => {
-    if (isFetching) return;
+  const getItemText = (item: TAutocompleteDropdownData): string => {
+    if (!labels.length) return "";
 
-    const delayDebounceFn = setTimeout(refetch, 600);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [search]);
-
-  const handleSelectItem = (item: IProfession) => {
-    const itemIsAlreadyStored = selectedItems.find(({ id }) => id === item.id);
-    if (itemIsAlreadyStored) {
-      setSelectedItems((prevState) =>
-        prevState.filter(({ id }) => id !== item.id)
-      );
-      return;
-    }
-    setSelectedItems((prevState) => [...prevState, item]);
-    handleItemClick(selectedItems);
+    return labels.reduce((prevValue, currValue) => {
+      const newText = ` ${item[currValue as keyof TAutocompleteDropdownData]}`;
+      return prevValue + newText;
+    }, "");
   };
 
   return (
     <View style={styles.container}>
-      {title && <Text>Filter By</Text>}
+      {title && <Text>{title}</Text>}
       <View style={styles.inputContainer}>
         <TextInput
           placeholder={placeholder}
@@ -61,7 +55,7 @@ export function AutocompleteDropdown({
           value={search}
         />
       </View>
-      {isFetching && (
+      {isLoading && (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color={CONSTANTS.LOADING_COLOR} />
         </View>
@@ -70,14 +64,15 @@ export function AutocompleteDropdown({
         data={data}
         renderItem={({ item }) => {
           const isSelected = selectedItems.find(({ id }) => item.id === id);
+          const text = getItemText(item);
           return (
             <TouchableOpacity
-              onPress={() => handleSelectItem(item)}
+              onPress={() => handleItemClick(item as any)}
               style={isSelected ? styles.selected : {}}
             >
               <View style={styles.resultItem}>
                 <View>
-                  <Text>{item.name}</Text>
+                  <Text>{text}</Text>
                 </View>
                 <View>{isSelected && <Icon name="check" />}</View>
               </View>

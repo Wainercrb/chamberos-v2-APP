@@ -24,7 +24,7 @@ export const apiChamberos = createApi({
       }
     >({
       query: ({ latitude, longitude, professions, radius }) => ({
-        url: '/user/get-location-near',
+        url: "/user/get-location-near",
         method: "get",
         params: {
           latitude,
@@ -33,9 +33,6 @@ export const apiChamberos = createApi({
           professionIds: professions,
         },
       }),
-      transformResponse: (response: any) => {
-        return response as IUser[];
-      },
     }),
     getProfessions: builder.query<IProfession[], { name: string }>({
       query: ({ name }) => ({
@@ -45,9 +42,6 @@ export const apiChamberos = createApi({
           name,
         },
       }),
-      transformResponse: (response: any) => {
-        return response as IProfession[];
-      },
       serializeQueryArgs: ({ queryArgs, endpointName }) => {
         return endpointName;
       },
@@ -70,8 +64,10 @@ export const apiChamberos = createApi({
 });
 
 export const {
+  endpoints,
   useGetUsersQuery,
   useLazyGetUsersQuery,
+  useLazyGetProfessionsQuery,
   useGetProfessionsQuery,
   useCreateUserMutation,
 } = apiChamberos;
