@@ -14,6 +14,7 @@ import {
 } from "../services/chamberosAPI";
 import { Map } from "../components/Map";
 import { useLocation } from "../hooks/useLocation";
+import { useWatchLocation } from "../hooks/useWatchLocation";
 import { IconButton } from "../components/IconButton";
 import { SimpleModal } from "../components/Modal";
 import { AutocompleteDropdown } from "../components/AutocompleteDropdown";
@@ -24,7 +25,7 @@ import Slider from "@react-native-community/slider";
 const INIT_SEL_PROFESSION: TAutocompleteDropdownData[] = [];
 
 export default function SearchPage() {
-  const { location, locationError } = useLocation();
+  const { location, locationError } = useWatchLocation();
   const [radius, setRadius] = useState(15);
   const [professionModalOpen, setProfessionModalOpen] = useState(false);
   const [selProfessions, setSelProfessions] = useState(INIT_SEL_PROFESSION);
@@ -40,8 +41,8 @@ export default function SearchPage() {
     );
 
     fetchUsers({
-      latitude: location.latitude,
-      longitude: location.longitude,
+      latitude: location.coords.latitude,
+      longitude: location.coords.latitude,
       radius: value ?? radius,
       professions: textProfession,
     });
@@ -76,7 +77,9 @@ export default function SearchPage() {
 
   return (
     <View style={styles.container}>
-      {location?.latitude && location.longitude && Platform.OS !== "web" ? (
+      {location?.coords.latitude &&
+      location.coords.longitude &&
+      Platform.OS !== "web" ? (
         <>
           <Map users={users.data ?? []} location={location} radius={radius} />
         </>
