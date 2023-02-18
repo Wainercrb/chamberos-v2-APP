@@ -5,8 +5,10 @@ import { IUser } from "../../types";
 import { useLocation } from "../hooks/useLocation";
 import { useCreateUserMutation } from "../services/chamberosAPI";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ProfilePage() {
+  const navigation = useNavigation();
   const [createUser, response] = useCreateUserMutation();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -87,6 +89,10 @@ export default function ProfilePage() {
             disabled={isLoading}
             onPress={(e: any) => handleSubmit(e)}
             title="Submit"
+          />
+          <Button
+            title="Go login"
+            onPress={() => navigation.navigate("Auth" as never)}
           />
         </View>
       )}
