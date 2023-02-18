@@ -12,6 +12,7 @@ type TArgs = {
 };
 
 export function Map({ users, location, radius }: TArgs) {
+  console.log(users)
   const mapViewRef = useRef<MapView>(null);
 
   useEffect(() => {

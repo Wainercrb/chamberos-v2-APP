@@ -36,13 +36,13 @@ export default function SearchPage() {
     if (!location) return;
 
     const textProfession = selProfessions.reduce(
-      (prev, curr) => prev + `,${curr.id}`,
+      (prev, curr) => prev += `,${curr.id}`,
       ""
     );
 
     fetchUsers({
       latitude: location.coords.latitude,
-      longitude: location.coords.latitude,
+      longitude: location.coords.longitude,
       radius: value ?? radius,
       professions: textProfession,
     });
