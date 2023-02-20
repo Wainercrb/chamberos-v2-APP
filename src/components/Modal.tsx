@@ -1,17 +1,17 @@
 import { Modal, StyleSheet, View } from "react-native";
 import { IconButton } from "./IconButton";
 
-type TArgs = {
+type TProps = {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  ChildElement: JSX.Element;
+  childElement: JSX.Element;
 };
 
 export function SimpleModal({
   modalVisible,
   setModalVisible,
-  ChildElement,
-}: TArgs) {
+  childElement,
+}: TProps) {
   return (
     <View>
       <Modal
@@ -34,7 +34,7 @@ export function SimpleModal({
                 }}
               />
             </View>
-            {ChildElement}
+            {childElement}
           </View>
         </View>
       </Modal>

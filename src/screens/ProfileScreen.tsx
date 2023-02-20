@@ -7,7 +7,7 @@ import { useCreateUserMutation } from "../services/chamberosAPI";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ProfilePage() {
+export default function ProfileScreen() {
   const navigation = useNavigation();
   const [createUser, response] = useCreateUserMutation();
   const [isLoading, setIsLoading] = useState(false);

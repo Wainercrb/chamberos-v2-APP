@@ -4,6 +4,7 @@ export interface IProfession {
   id?: string;
   name: string;
   role: TProfessionRole;
+  isSelected?: boolean;
 }
 
 export interface IUser {
@@ -18,8 +19,18 @@ export interface IUser {
   };
 }
 
-export interface ICustomProfession extends IProfession {
-  isSelected: boolean;
-}
+export type THomeStackParamList = {
+  Map: undefined;
+  UserDetails: { user: IUser};
+};
 
-export type TAutocompleteDropdownData = IProfession;
+
+export type TAuthStackParamList = {
+  Search: undefined;
+  Profile: undefined;
+};
+
+export type TRootStackParamList = {
+  Auth: TAuthStackParamList;
+  Home: THomeStackParamList;
+};

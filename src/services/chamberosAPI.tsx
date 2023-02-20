@@ -13,6 +13,7 @@ const baseQuery = fetchBaseQuery({
 
 export const apiChamberos = createApi({
   baseQuery: baseQuery,
+  tagTypes: ["Users", "Professions"],
   endpoints: (builder) => ({
     getUsers: builder.query<
       IUser[],
@@ -26,6 +27,7 @@ export const apiChamberos = createApi({
       query: ({ latitude, longitude, professions, radius }) => ({
         url: "/user/get-location-near",
         method: "get",
+        providesTags: ["Users"],
         params: {
           latitude,
           longitude,
@@ -34,17 +36,15 @@ export const apiChamberos = createApi({
         },
       }),
     }),
-    getProfessions: builder.query<IProfession[], { name: string }>({
-      query: ({ name }) => ({
+    getProfessions: builder.query<IProfession[], { professionName?: string }>({
+      query: ({ professionName = "" }) => ({
         url: `/profession/get-all`,
         method: "get",
+        providesTags: ["Professions"],
         params: {
-          name,
+          name: professionName,
         },
       }),
-      serializeQueryArgs: ({ queryArgs, endpointName }) => {
-        return endpointName;
-      },
     }),
     createUser: builder.mutation<IUser[], IUser>({
       query: (user) => ({
@@ -56,9 +56,6 @@ export const apiChamberos = createApi({
         },
         params: {},
       }),
-      transformResponse: (response: any) => {
-        return response as IUser[];
-      },
     }),
   }),
 });

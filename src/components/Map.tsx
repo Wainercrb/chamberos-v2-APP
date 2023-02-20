@@ -1,9 +1,10 @@
-import { useRef, useEffect } from "react";
 import MapView, { Marker, Circle, LatLng } from "react-native-maps";
+import { useRef, useEffect } from "react";
 import { StyleSheet, View, Platform, Dimensions } from "react-native";
-import { IUser } from "../../types";
+import { IUser, THomeStackParamList } from "../../types";
 import { LocationObject } from "expo-location";
 import { UserMarker } from "./UserMarkert";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 type TArgs = {
   users: IUser[];
@@ -11,9 +12,11 @@ type TArgs = {
   radius: number;
 };
 
+type THomeScreenNavigationProp = NavigationProp<THomeStackParamList, "Map">;
+
 export function Map({ users, location, radius }: TArgs) {
-  console.log(users)
   const mapViewRef = useRef<MapView>(null);
+  const navigation = useNavigation<THomeScreenNavigationProp>();
 
   useEffect(() => {
     if (mapViewRef.current) {
@@ -22,6 +25,12 @@ export function Map({ users, location, radius }: TArgs) {
       mapViewRef.current?.animateToRegion(center, 1000);
     }
   }, [radius]);
+
+  const handleMarkerPress = (user: IUser) => {
+    const { location } = user;
+    handleCenterMap({ latitude: location.y, longitude: location.x }, radius);
+    navigation.navigate("UserDetails", { user });
+  };
 
   const handleCenterMap = (center: LatLng, radiusInKilometers: number) => {
     const { width, height } = Dimensions.get("window");
@@ -51,18 +60,16 @@ export function Map({ users, location, radius }: TArgs) {
           strokeColor={"#1a66ff"}
           fillColor={"rgba(230,238,255,0.5)"}
         />
-        {users.map(({ location, id, fullName }, idx) => (
+        {users.map((user, idx) => (
           <Marker
-            onPress={() =>
-              handleCenterMap(
-                { latitude: location.y, longitude: location.x },
-                radius
-              )
-            }
-            key={id}
-            coordinate={{ latitude: location.y, longitude: location.x }}
-            title={fullName}
-          />
+            onPress={() => handleMarkerPress(user)}
+            key={user.id}
+            coordinate={{
+              latitude: user.location.y,
+              longitude: user.location.x,
+            }}
+            title={user.fullName}
+          ></Marker>
         ))}
       </MapView>
     </View>

@@ -7,10 +7,10 @@ import NoAuthLayout from "./src/layouts/NoAuthLayout";
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Provider store={store}>
+    <Provider store={store}>
+      <NavigationContainer>
         <NoAuthLayout />
-      </Provider>
-    </NavigationContainer>
+      </NavigationContainer>
+    </Provider>
   );
 }

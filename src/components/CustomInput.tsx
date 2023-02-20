@@ -21,7 +21,7 @@ export function CustomInput({ label, error, iconName, ...rest }: TProps) {
         {iconName && <Icon name={iconName} size={24} color="#999" />}
         <TextInput style={styles.input} {...rest} />
       </View>
-      {error && <Text style={styles.inputError}>{error}</Text>}
+      {error && <Text style={styles.textError}>{error}</Text>}
     </View>
   );
 }
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     borderColor: "#e0e0e0",
     paddingHorizontal: 12,
     paddingVertical: 8,
-    marginBottom: 16,
+    marginBottom: 4,
   },
   input: {
     flex: 1,
@@ -46,14 +46,17 @@ const styles = StyleSheet.create({
     color: "#222",
   },
   inputLabel: {
+    marginTop: 6,
     fontSize: 16,
     lineHeight: 24,
     color: "#999",
-    marginBottom: 8,
   },
   inputError: {
     borderColor: "red",
     borderRadius: 2,
     borderWidth: 2,
   },
+  textError: {
+    color: 'red'
+  }
 });

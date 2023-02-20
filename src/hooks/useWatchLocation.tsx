@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import {
-  LocationObject,
   requestForegroundPermissionsAsync,
-  watchPositionAsync,
   LocationSubscription,
+  watchPositionAsync,
+  LocationObject,
   Accuracy,
 } from "expo-location";
 
 export function useWatchLocation() {
   const [location, setLocation] = useState<LocationObject | null>(null);
   const [locationError, setLocationError] = useState<any>(null);
+  const [locationMounted, setLocationMounted] = useState(false);
 
   useEffect(() => {
     let subscriber: LocationSubscription | null = null;
@@ -19,7 +20,7 @@ export function useWatchLocation() {
         const { status } = await requestForegroundPermissionsAsync();
         const positionArgs = {
           accuracy: Accuracy.BestForNavigation,
-          timeInterval: 1000,
+          timeInterval: 5000,
           distanceInterval: 10,
         };
 
@@ -30,11 +31,13 @@ export function useWatchLocation() {
         }
       } catch (err) {
         setLocationError(err);
+      } finally {
+        setLocationMounted(true);
       }
     };
-
+    
     startWatching();
-
+    
     return () => {
       if (subscriber) {
         subscriber.remove();
@@ -45,5 +48,6 @@ export function useWatchLocation() {
   return {
     location,
     locationError,
+    locationMounted,
   };
 }
