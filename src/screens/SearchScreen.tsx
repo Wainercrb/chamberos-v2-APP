@@ -21,23 +21,24 @@ export default function SearchScreen() {
 
   const handleTriggerUserData = (
     customRadius?: number,
-    professions: IProfession[] = []
+    professions?: IProfession[]
   ) => {
     if (!location) return;
-
-    const textProfession = professions.reduce((prev, curr) => {
-      return (prev += `,${curr.id}`);
-    }, "");
 
     fetchUsers(
       {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
         radius: customRadius ?? radius,
-        professions: textProfession,
+        professions: getProfessionIds(professions),
       },
       true
     );
+  };
+
+  const getProfessionIds = (professions: IProfession[] | undefined) => {
+    if (!professions) return users.originalArgs?.professions ?? '';
+    return professions.reduce((prev, curr) => (prev += `,${curr.id}`), "");
   };
 
   useEffect(() => {
@@ -50,12 +51,12 @@ export default function SearchScreen() {
     <View style={styles.container}>
       {location && Platform.OS !== "web" ? (
         <>
-          <Map users={users.data ?? []} location={location} radius={radius} />
+          {/* <Map users={users.data ?? []} location={location} radius={radius} /> */}
         </>
       ) : null}
       <View style={styles.professionButtonContainer}>
         <ProfessionModal
-          handleClose={(professions) =>
+          closeCallbackAction={(professions) =>
             handleTriggerUserData(undefined, professions)
           }
         />

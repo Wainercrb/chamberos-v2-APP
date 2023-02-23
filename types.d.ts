@@ -11,6 +11,7 @@ export interface IUser {
   id?: string;
   fullName: string;
   email: string;
+  username: string;
   password: string;
   professions: IProfession[];
   location: {
@@ -31,6 +32,7 @@ export type TAuthStackParamList = {
 };
 
 export type TRootStackParamList = {
-  Auth: TAuthStackParamList;
-  Home: THomeStackParamList;
+  SignInScreen: TAuthStackParamList;
+  SignUpScreen: TAuthStackParamList;
+  HomeStack: THomeStackParamList;
 };

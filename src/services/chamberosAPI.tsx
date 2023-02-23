@@ -6,6 +6,10 @@ const BASE_API_URL = "https://chamberos-api.herokuapp.com";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_API_URL,
+  credentials: "include",
+  headers: {
+    "Content-type": "application/json; charset=UTF-8",
+  },
   prepareHeaders: async (headers) => {
     return headers;
   },
@@ -27,6 +31,7 @@ export const apiChamberos = createApi({
       query: ({ latitude, longitude, professions, radius }) => ({
         url: "/user/get-location-near",
         method: "get",
+        credentials: "include",
         providesTags: ["Users"],
         params: {
           latitude,
@@ -51,10 +56,14 @@ export const apiChamberos = createApi({
         url: `/user/register`,
         method: "post",
         body: JSON.stringify(user),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-        params: {},
+      }),
+    }),
+    signIn: builder.mutation<IUser, Pick<IUser, "username" | "password">>({
+      query: (user) => ({
+        url: `/auth/authenticate`,
+        method: "post",
+        body: JSON.stringify(user),
+        credentials: "include",
       }),
     }),
   }),
@@ -67,4 +76,5 @@ export const {
   useLazyGetProfessionsQuery,
   useGetProfessionsQuery,
   useCreateUserMutation,
+  useSignInMutation,
 } = apiChamberos;

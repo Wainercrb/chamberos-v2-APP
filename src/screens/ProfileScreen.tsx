@@ -24,6 +24,7 @@ export default function ProfileScreen() {
 
   const initialValues: IUser = {
     fullName: "",
+    username: "",
     email: "",
     password: "",
     professions: [{ name: "", role: "FULLTIME" }],

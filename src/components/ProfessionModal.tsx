@@ -26,12 +26,12 @@ import {
 } from "../store/slices/searchProfessionSlice";
 
 type TProps = {
-  handleClose: (professions: IProfession[]) => void;
+  closeCallbackAction: (professions: IProfession[]) => void;
   buttonLabel?: string;
 };
 
 export function ProfessionModal({
-  handleClose,
+  closeCallbackAction,
   buttonLabel = CONSTANTS.SEARCH_PROFESSION_MODAL,
 }: TProps) {
   const dispatch = useDispatch<AppDispatch>();
@@ -44,6 +44,7 @@ export function ProfessionModal({
 
   useEffect(() => {
     if (!inputClicked) return;
+    
     const delayDebounceFn = setTimeout(() => {
       fetchProfessions({ professionName });
     }, 300);
@@ -76,6 +77,15 @@ export function ProfessionModal({
       }
       return profession;
     });
+  };
+
+  const handleClose = () => {
+    const selectedProfessions = (professions.data ?? []).filter(
+      ({ isSelected }) => isSelected
+    );
+
+    setModalOpen(false);
+    closeCallbackAction(selectedProfessions);
   };
 
   const updateQueryData = ({ id }: IProfession) => {
@@ -142,10 +152,7 @@ export function ProfessionModal({
             </View>
             <Button
               title={CONSTANTS.SEARCH_PROFESSION_MODAL}
-              onPress={() => {
-                setModalOpen(false);
-                handleClose(professions.data ?? []);
-              }}
+              onPress={handleClose}
             />
           </>
         }
