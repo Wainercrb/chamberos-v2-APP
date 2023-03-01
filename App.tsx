@@ -3,14 +3,17 @@ import { Provider } from "react-redux";
 import store from "./src/store";
 import "react-native-gesture-handler";
 // Layouts
-import NoAuthLayout from "./src/layouts/NoAuthLayout";
+import PublicLayout from "./src/layouts/PublicLayout";
+import { Suspense } from "react";
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <NoAuthLayout />
-      </NavigationContainer>
-    </Provider>
+    <Suspense fallback={<>Loading</>}>
+      <Provider store={store}>
+        {/* <NavigationContainer onReady={() => {console.log("ready")}}> */}
+          <PublicLayout />
+        {/* </NavigationContainer> */}
+      </Provider>
+    </Suspense>
   );
 }

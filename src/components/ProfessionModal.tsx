@@ -16,8 +16,9 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import { SimpleModal } from "./Modal";
 import { CustomInput } from "./CustomInput";
-import { IProfession } from "../../types";
+import { ErrorFeedback } from "./ErrorFeedback";
 import { IconButton } from "./IconButton";
+import { IProfession } from "../../types";
 import { CONSTANTS } from "../../CONSTANTS";
 import { AppDispatch, RootState } from "../store";
 import {
@@ -32,7 +33,7 @@ type TProps = {
 
 export function ProfessionModal({
   closeCallbackAction,
-  buttonLabel = CONSTANTS.SEARCH_PROFESSION_MODAL,
+  buttonLabel = CONSTANTS.COMPONENTS.PROFESSIONAL_MODAL.INPUT_LABEL,
 }: TProps) {
   const dispatch = useDispatch<AppDispatch>();
   const [inputClicked, setInputClicked] = useState(false);
@@ -44,7 +45,7 @@ export function ProfessionModal({
 
   useEffect(() => {
     if (!inputClicked) return;
-    
+
     const delayDebounceFn = setTimeout(() => {
       fetchProfessions({ professionName });
     }, 300);
@@ -117,7 +118,7 @@ export function ProfessionModal({
           <>
             <CustomInput
               iconName="card-search-outline"
-              label={CONSTANTS.SEARCH_PROFESSION_MODAL}
+              label={CONSTANTS.COMPONENTS.PROFESSIONAL_MODAL.INPUT_LABEL}
               onFocus={() => setInputClicked(true)}
               onChangeText={setProfessionName}
               value={professionName}
@@ -141,17 +142,13 @@ export function ProfessionModal({
               }}
               keyExtractor={(_, idx) => idx.toString()}
             />
-            <View style={styles.error}>
-              {professions.error && (
-                <>
-                  <Text>
-                    Error fetching the data: {JSON.stringify(professions.error)}
-                  </Text>
-                </>
-              )}
-            </View>
+            {professions.error ? (
+              <View style={styles.error}>
+                <ErrorFeedback error={professions.error} />
+              </View>
+            ) : null}
             <Button
-              title={CONSTANTS.SEARCH_PROFESSION_MODAL}
+              title={CONSTANTS.COMPONENTS.PROFESSIONAL_MODAL.INPUT_LABEL}
               onPress={handleClose}
             />
           </>

@@ -1,105 +1,133 @@
-import * as Yup from "yup";
-import { Alert, View, Text, StyleSheet } from "react-native";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { ScrollView } from "react-native-gesture-handler";
+import { useEffect, useState } from "react";
+import { View, StyleSheet, Button } from "react-native";
+import {
+  NavigationProp,
+  useNavigation,
+  StackActions,
+} from "@react-navigation/native";
 import { Formik } from "formik";
 import { CustomInput } from "../components/CustomInput";
 import { LoadingButton } from "../components/LoadingButton";
+import { ErrorFeedback } from "../components/ErrorFeedback";
+import { persistLocalStorage } from "../utilities/localStorage.utility";
+import { getErrorMessage } from "../utilities/catchError.utility";
 import { useSignInMutation } from "../services/chamberosAPI";
+import { createUserSession } from "../store/slices/userSessionSlice";
+import { useAppDispatch } from "../store";
 import { CONSTANTS } from "../../CONSTANTS";
-import { IUser, THomeStackParamList, TRootStackParamList } from "../../types";
+import { SIGN_IN_USER_VALIDATION_SCHEMA } from "../utilities/schema-validations/signin.validator";
+import {
+  IAuthenticateUser,
+  TAuthStackParamList,
+  TRootStackParamList,
+} from "../../types";
 
 type TAuthScreenNavigationProp = NavigationProp<
   TRootStackParamList,
   "SignInScreen"
 >;
 
-const USER_SCHEMA: Yup.Schema<Pick<IUser, "username" | "password">> =
-  Yup.object().shape({
-    username: Yup.string().required("Full name is required"),
-    password: Yup.string().required("Password is required"),
-  });
-
 export default function SignInScreen() {
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<TAuthScreenNavigationProp>();
+  const [persistDataError, setPersistDataError] = useState("");
   const [signInUser, response] = useSignInMutation();
 
-  const navigation = useNavigation<TAuthScreenNavigationProp>();
-
-  const handleSubmit = async (user: Pick<IUser, "username" | "password">) => {
-    signInUser(user).then(() => {
-      navigation.navigate("HomeStack", {} as THomeStackParamList);
-    });
+  const persistData = async (user: IAuthenticateUser | undefined) => {
+    if (!user) return;
+    try {
+      await persistLocalStorage(CONSTANTS.LOCAL_STORAGE_KEY, response.data);
+      dispatch(createUserSession(user));
+      navigation.dispatch(StackActions.replace("HomeStack"));
+    } catch (error) {
+      setPersistDataError(getErrorMessage(error));
+    }
   };
 
+  useEffect(() => {
+    persistData(response.data);
+  }, [response.data]);
+
   return (
-    <ScrollView style={styles.container}>
-      <View>
-        {response.error ? <Text>{JSON.stringify(response.error)}</Text> : null}
-      </View>
-      <Formik
-        validationSchema={USER_SCHEMA}
-        initialValues={{
-          username: "",
-          password: "",
-        }}
-        onSubmit={handleSubmit}
-      >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-        }) => (
-          <View>
-            <CustomInput
-              keyboardType="default"
-              label="Username"
-              iconName="account"
-              onChangeText={handleChange("username")}
-              onBlur={handleBlur("username")}
-              value={values.username}
-              error={touched.password ? errors.username : undefined}
-            />
-
-            <CustomInput
-              secureTextEntry={true}
-              label="Password"
-              iconName="key-chain"
-              onChangeText={handleChange("password")}
-              onBlur={handleBlur("password")}
-              value={values.password}
-              error={touched.password ? errors.password : undefined}
-            />
-
-            <View style={styles.saveButtonContainer}>
-              <LoadingButton
-                isLoading={response.isLoading}
-                label={CONSTANTS.SIGN_IN_BUTTON}
-                onPress={() => handleSubmit()}
+    <View style={styles.container}>
+      <View style={styles.formBody}>
+        <Formik
+          validationSchema={SIGN_IN_USER_VALIDATION_SCHEMA}
+          initialValues={{
+            username: "",
+            password: "",
+          }}
+          onSubmit={signInUser}
+        >
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
+            <View>
+              <CustomInput
+                keyboardType="default"
+                label="Username"
+                iconName="account"
+                onChangeText={handleChange("username")}
+                onBlur={handleBlur("username")}
+                value={values.username}
+                error={touched.password ? errors.username : undefined}
               />
-            </View>
 
-            {/* <Button
-              title="Go login"
-              onPress={() => navigation.navigate("Home" as never)}
-            /> */}
-          </View>
-        )}
-      </Formik>
-    </ScrollView>
+              <CustomInput
+                secureTextEntry={true}
+                label="Password"
+                iconName="key-chain"
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                value={values.password}
+                error={touched.password ? errors.password : undefined}
+              />
+
+              <View style={styles.saveButtonContainer}>
+                <LoadingButton
+                  isLoading={response.isLoading}
+                  label={CONSTANTS.SCREENS.SIGN_IN.BUTTON_SIGN_IN}
+                  onPress={() => handleSubmit()}
+                />
+                {response.error ? (
+                  <ErrorFeedback error={response.error} />
+                ) : null}
+                {persistDataError ? (
+                  <ErrorFeedback error={persistDataError} />
+                ) : null}
+              </View>
+            </View>
+          )}
+        </Formik>
+      </View>
+      <View>
+        <Button
+          title={CONSTANTS.SCREENS.SIGN_IN.BUTTON_GO_TO_SIGN_UP}
+          onPress={() =>
+            navigation.navigate("SignUpScreen", {} as TAuthStackParamList)
+          }
+        />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 16,
+    flex: 1,
+  },
+  formBody: {
+    flex: 1,
+    marginTop: 64,
   },
   saveButtonContainer: {
-    marginTop: 38,
-    marginBottom: 38,
+    marginTop: 28,
   },
   professionContainer: {
     marginTop: 14,

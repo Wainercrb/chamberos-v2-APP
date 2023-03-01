@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IUser, IProfession } from "../../types";
+import { IUser, IProfession, IAuthenticateUser } from "../../types";
 
 // const BASE_API_URL = "http://localhost:8080"; // TODO: Move the variable to the env file
 const BASE_API_URL = "https://chamberos-api.herokuapp.com";
@@ -19,6 +19,22 @@ export const apiChamberos = createApi({
   baseQuery: baseQuery,
   tagTypes: ["Users", "Professions"],
   endpoints: (builder) => ({
+    getUser: builder.query<
+      IUser,
+      {
+        userId: string;
+      }
+    >({
+      query: ({ userId }) => ({
+        url: "/user/get",
+        method: "get",
+        credentials: "include",
+        providesTags: ["Users"],
+        params: {
+          userId
+        },
+      }),
+    }),
     getUsers: builder.query<
       IUser[],
       {
@@ -53,12 +69,15 @@ export const apiChamberos = createApi({
     }),
     createUser: builder.mutation<IUser[], IUser>({
       query: (user) => ({
-        url: `/user/register`,
+        url: `/auth/register`,
         method: "post",
         body: JSON.stringify(user),
       }),
     }),
-    signIn: builder.mutation<IUser, Pick<IUser, "username" | "password">>({
+    signIn: builder.mutation<
+      IAuthenticateUser,
+      Pick<IUser, "username" | "password">
+    >({
       query: (user) => ({
         url: `/auth/authenticate`,
         method: "post",
@@ -72,9 +91,10 @@ export const apiChamberos = createApi({
 export const {
   endpoints,
   useGetUsersQuery,
+  useGetUserQuery,
   useLazyGetUsersQuery,
   useLazyGetProfessionsQuery,
   useGetProfessionsQuery,
   useCreateUserMutation,
-  useSignInMutation,
+  useSignInMutation
 } = apiChamberos;

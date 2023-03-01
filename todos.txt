@@ -1,1 +1,3 @@
 Profession allow empty list
+Sign up return user data such as password(API)
+add mix and max to the user and pass

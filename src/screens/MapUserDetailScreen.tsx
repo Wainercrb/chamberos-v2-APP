@@ -4,16 +4,18 @@ import type { THomeStackParamList } from "../../types";
 import { CONSTANTS } from "../../CONSTANTS";
 
 type TScreenProps = {
-  route: RouteProp<THomeStackParamList, "UserDetails">;
+  route: RouteProp<THomeStackParamList, "MapUserDetails">;
 };
 
-export default function UserDefaultScreen({ route }: TScreenProps) {
+export default function MapUserDefaultScreen({ route }: TScreenProps) {
   const { user } = route.params;
 
   if (!user) {
     return (
       <View style={styles.container}>
-        <Text>{CONSTANTS.ERROR_LOADING_THE_USER}</Text>
+        <Text>
+          {CONSTANTS.SCREENS.MAP_USER_DETAILS.ERROR_GETTING_THE_USER_PROP}
+        </Text>
       </View>
     );
   }
@@ -30,7 +32,7 @@ export default function UserDefaultScreen({ route }: TScreenProps) {
           {user.professions.map((profession) => (
             <View key={profession.id} style={styles.professionContainer}>
               <Text style={styles.professionName}>{profession.name}</Text>
-              <Text style={styles.professionRole}>{profession.role}</Text>
+              {/* <Text style={styles.professionRole}>{profession.role}</Text> */}
             </View>
           ))}
         </View>

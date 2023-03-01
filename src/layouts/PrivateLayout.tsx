@@ -1,25 +1,27 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TAuthStackParamList, THomeStackParamList } from "../../types";
+import { CONSTANTS } from "../../CONSTANTS";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-// Pages
+
+// Screens
 import SearchScreen from "../screens/SearchScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import UserDetailScreen from "../screens/UserDetailScreen";
+import SignInUserProfileScreen from "../screens/SignInUserProfileScreen";
+import MapUserDetailScreen from "../screens/MapUserDetailScreen";
 
 const Tab = createBottomTabNavigator<TAuthStackParamList>();
 const Stack = createStackNavigator<THomeStackParamList>();
 
-function HomeStackScreen() {
+function SearchStackScreen() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Map" component={SearchScreen} />
-      <Stack.Screen name="UserDetails" component={UserDetailScreen} />
+      <Stack.Screen name="MapUserDetails" component={MapUserDetailScreen} />
     </Stack.Navigator>
   );
 }
 
-export default function AuthLayout() {
+export default function PrivateLayout() {
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -31,17 +33,18 @@ export default function AuthLayout() {
             <MaterialCommunityIcons name="map" color={color} size={size} />
           ),
         }}
-        component={HomeStackScreen}
+        component={SearchStackScreen}
       />
       <Tab.Screen
-        name="Profile"
+        name="SignInUserProfile"
         options={{
           tabBarLabel: "Profile",
+          title: CONSTANTS.SCREENS.SIGN_IN_USER_PROFILE.TITLE,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />
           ),
         }}
-        component={ProfileScreen}
+        component={SignInUserProfileScreen}
       />
     </Tab.Navigator>
   );

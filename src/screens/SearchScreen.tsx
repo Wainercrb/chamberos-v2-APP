@@ -10,6 +10,7 @@ import { useWatchLocation } from "../hooks/useWatchLocation";
 import Slider from "@react-native-community/slider";
 import { Map } from "../components/Map";
 import { ProfessionModal } from "../components/ProfessionModal";
+import { ErrorFeedback } from "../components/ErrorFeedback";
 import { useLazyGetUsersQuery } from "../services/chamberosAPI";
 import { IProfession } from "../../types";
 import { CONSTANTS } from "../../CONSTANTS";
@@ -37,7 +38,7 @@ export default function SearchScreen() {
   };
 
   const getProfessionIds = (professions: IProfession[] | undefined) => {
-    if (!professions) return users.originalArgs?.professions ?? '';
+    if (!professions) return users.originalArgs?.professions ?? "";
     return professions.reduce((prev, curr) => (prev += `,${curr.id}`), "");
   };
 
@@ -51,7 +52,7 @@ export default function SearchScreen() {
     <View style={styles.container}>
       {location && Platform.OS !== "web" ? (
         <>
-          {/* <Map users={users.data ?? []} location={location} radius={radius} /> */}
+          <Map users={users.data ?? []} location={location} radius={radius} />
         </>
       ) : null}
       <View style={styles.professionButtonContainer}>
@@ -85,8 +86,8 @@ export default function SearchScreen() {
 
       {users.error || locationError ? (
         <View style={styles.errorContainer}>
-          <Text>{JSON.stringify(users.error)}</Text>
-          <Text>{JSON.stringify(locationError)}</Text>
+          {users.error ? <ErrorFeedback error={users.error} /> : null}
+          {locationError ? <ErrorFeedback error={locationError} /> : null}
         </View>
       ) : null}
     </View>
