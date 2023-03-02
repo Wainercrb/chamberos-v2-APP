@@ -1,3 +1,5 @@
+import { NavigationProp } from "@react-navigation/native";
+
 type TProfessionRole = "FULLTIME" | "TEMPORAL";
 
 export interface IProfession {
@@ -19,8 +21,8 @@ export interface IUser {
   email: string;
   username: string;
   password: string;
-  professions: IProfession[];
-  roles: IRole[];
+  professions: TListOfProfessions;
+  roles: TListOfRoles;
   isActive: boolean;
   location: {
     x: number;
@@ -28,23 +30,35 @@ export interface IUser {
   };
 }
 
-// NAVIGATOR ROUTES
+export type TListOfUsers = IUser[]
 
-export type THomeStackParamList = {
+export type TListOfProfessions = IProfession[]
+
+export type TListOfRoles = IRole[]
+
+
+// NAVIGATOR ROUTES
+export type TMapStackParamList = {
   Map: undefined;
   MapUserDetails: { user: IUser };
 };
 
-export type TAuthStackParamList = {
-  Search: undefined;
+export type TPrivateStackParamList = {
+  Search: IMapStackParamList;
   SignInUserProfile: undefined;
 };
 
 export type TRootStackParamList = {
-  SignInScreen: TAuthStackParamList;
-  SignUpScreen: TAuthStackParamList;
-  HomeStack: THomeStackParamList;
+  SignInScreen: undefined;
+  SignUpScreen: undefined;
+  PrivateStack: IPrivateStackParamList;
 };
+
+export type TSearchStackNavigationProps = NavigationProp<IMapStackParamList>;
+
+export type TRootStackNavigationProps = NavigationProp<IRootStackParamList>;
+
+
 
 // AUTHENTICATE USER
 

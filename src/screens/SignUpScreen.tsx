@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Alert, View, Text, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
 import { ProfessionModal } from "../components/ProfessionModal";
 import { CustomInput } from "../components/CustomInput";
@@ -12,18 +12,13 @@ import { useLocation } from "../hooks/useLocation";
 import { useCreateUserMutation } from "../services/chamberosAPI";
 import { CONSTANTS } from "../../CONSTANTS";
 import { SIGN_UP_VALIDATION_SCHEMA } from "../utilities/schema-validations/signup.validator";
-import { TAuthStackParamList, TRootStackParamList } from "../../types";
-
-type TAuthScreenNavigationProp = NavigationProp<
-  TRootStackParamList,
-  "SignInScreen"
->;
+import { type TRootStackNavigationProps } from "../../types";
 
 export default function SignInScreen() {
   const { location, locationError } = useLocation();
   const [createUser, userResponse] = useCreateUserMutation();
 
-  const navigation = useNavigation<TAuthScreenNavigationProp>();
+  const navigation = useNavigation<TRootStackNavigationProps>();
 
   useEffect(() => {
     if (userResponse.data && !userResponse.isError) {
@@ -33,8 +28,7 @@ export default function SignInScreen() {
         [
           {
             text: CONSTANTS.ALERTS.SUCCESS.BUTTON_OK,
-            onPress: () =>
-              navigation.navigate("SignInScreen", {} as TAuthStackParamList),
+            onPress: () => navigation.navigate("SignInScreen"),
           },
         ]
       );

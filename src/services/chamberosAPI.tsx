@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IUser, IProfession, IAuthenticateUser } from "../../types";
+import { IUser, IProfession, IAuthenticateUser, type TListOfProfessions, type TListOfUsers } from "../../types";
 
 // const BASE_API_URL = "http://localhost:8080"; // TODO: Move the variable to the env file
 const BASE_API_URL = "https://chamberos-api.herokuapp.com";
@@ -36,7 +36,7 @@ export const apiChamberos = createApi({
       }),
     }),
     getUsers: builder.query<
-      IUser[],
+      TListOfUsers,
       {
         latitude: number;
         longitude: number;
@@ -57,7 +57,7 @@ export const apiChamberos = createApi({
         },
       }),
     }),
-    getProfessions: builder.query<IProfession[], { professionName?: string }>({
+    getProfessions: builder.query<TListOfProfessions, { professionName?: string }>({
       query: ({ professionName = "" }) => ({
         url: `/profession/get-all`,
         method: "get",
@@ -67,7 +67,7 @@ export const apiChamberos = createApi({
         },
       }),
     }),
-    createUser: builder.mutation<IUser[], IUser>({
+    createUser: builder.mutation<TListOfUsers, IUser>({
       query: (user) => ({
         url: `/auth/register`,
         method: "post",

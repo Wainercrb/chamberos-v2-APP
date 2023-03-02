@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
   View,
   Text,
@@ -7,24 +8,27 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-type TProps = {
+interface IProps extends TextInputProps {
   label: string;
   error?: string;
   iconName?: string;
-} & TextInputProps;
-
-export function CustomInput({ label, error, iconName, ...rest }: TProps) {
-  return (
-    <View>
-      <Text style={styles.inputLabel}>{label}</Text>
-      <View style={[styles.inputContainer, error ? styles.inputError : {}]}>
-        {iconName && <Icon name={iconName} size={24} color="#999" />}
-        <TextInput style={styles.input} {...rest} />
-      </View>
-      {error && <Text style={styles.textError}>{error}</Text>}
-    </View>
-  );
 }
+
+export const CustomInput: FC<IProps> = ({
+  label,
+  error,
+  iconName,
+  ...rest
+}) => (
+  <View>
+    <Text style={styles.inputLabel}>{label}</Text>
+    <View style={[styles.inputContainer, error ? styles.inputError : {}]}>
+      {iconName && <Icon name={iconName} size={24} color="#999" />}
+      <TextInput style={styles.input} {...rest} />
+    </View>
+    {error && <Text style={styles.textError}>{error}</Text>}
+  </View>
+);
 
 const styles = StyleSheet.create({
   inputContainer: {
@@ -57,6 +61,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   textError: {
-    color: 'red'
-  }
+    color: "red",
+  },
 });

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { getErrorMessage } from "../utilities/catchError.utility";
 
-type TProps = {
+interface IProps {
   asyncFunction: Function;
-};
+}
 
-export function useAsync<T>({ asyncFunction }: TProps) {
+export function useAsync<T>({ asyncFunction }: IProps) {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,6 @@ export function useAsync<T>({ asyncFunction }: TProps) {
         const result = await asyncFunction();
         setData(result);
       } catch (error: unknown) {
-        
         setError(getErrorMessage(error));
       } finally {
         setIsLoading(false);
@@ -29,4 +28,3 @@ export function useAsync<T>({ asyncFunction }: TProps) {
 
   return { data, error, isLoading };
 }
-

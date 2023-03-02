@@ -1,22 +1,22 @@
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NavigationProp, StackActions } from "@react-navigation/native";
 import { RootState } from "../store";
-import { TRootStackParamList } from "../../types";
+import { type TRootStackParamList } from "../../types";
 
-type TProps = {
+interface IProps {
   navigation: NavigationProp<TRootStackParamList>;
   Component: () => JSX.Element;
   allowedRoles: string[];
   redirectTo: keyof TRootStackParamList;
-};
+}
 
-export default function ProtectedScreen({
+const ProtectedScreen: FC<IProps> = ({
   Component,
   navigation,
   allowedRoles,
   redirectTo,
-}: TProps) {
+}) => {
   const { user } = useSelector(({ userSession }: RootState) => userSession);
 
   const userHasAccess = () => {
@@ -32,4 +32,6 @@ export default function ProtectedScreen({
   }, [user]);
 
   return <Component />;
-}
+};
+
+export default ProtectedScreen;

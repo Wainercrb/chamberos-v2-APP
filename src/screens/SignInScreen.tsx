@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, StyleSheet, Button } from "react-native";
-import {
-  NavigationProp,
-  useNavigation,
-  StackActions,
-} from "@react-navigation/native";
+import { useNavigation, StackActions } from "@react-navigation/native";
 import { Formik } from "formik";
 import { CustomInput } from "../components/CustomInput";
 import { LoadingButton } from "../components/LoadingButton";
@@ -16,20 +12,11 @@ import { createUserSession } from "../store/slices/userSessionSlice";
 import { useAppDispatch } from "../store";
 import { CONSTANTS } from "../../CONSTANTS";
 import { SIGN_IN_USER_VALIDATION_SCHEMA } from "../utilities/schema-validations/signin.validator";
-import {
-  IAuthenticateUser,
-  TAuthStackParamList,
-  TRootStackParamList,
-} from "../../types";
-
-type TAuthScreenNavigationProp = NavigationProp<
-  TRootStackParamList,
-  "SignInScreen"
->;
+import { type TRootStackNavigationProps, IAuthenticateUser } from "../../types";
 
 export default function SignInScreen() {
   const dispatch = useAppDispatch();
-  const navigation = useNavigation<TAuthScreenNavigationProp>();
+  const navigation = useNavigation<TRootStackNavigationProps>();
   const [persistDataError, setPersistDataError] = useState("");
   const [signInUser, response] = useSignInMutation();
 
@@ -38,7 +25,7 @@ export default function SignInScreen() {
     try {
       await persistLocalStorage(CONSTANTS.LOCAL_STORAGE_KEY, response.data);
       dispatch(createUserSession(user));
-      navigation.dispatch(StackActions.replace("HomeStack"));
+      navigation.dispatch(StackActions.replace("PrivateStack"));
     } catch (error) {
       setPersistDataError(getErrorMessage(error));
     }
@@ -108,9 +95,7 @@ export default function SignInScreen() {
       <View>
         <Button
           title={CONSTANTS.SCREENS.SIGN_IN.BUTTON_GO_TO_SIGN_UP}
-          onPress={() =>
-            navigation.navigate("SignUpScreen", {} as TAuthStackParamList)
-          }
+          onPress={() => navigation.navigate("SignUpScreen")}
         />
       </View>
     </View>

@@ -1,22 +1,24 @@
+import { useRef, useEffect, FC } from "react";
 import MapView, { Marker, Circle, LatLng } from "react-native-maps";
-import { useRef, useEffect } from "react";
 import { StyleSheet, View, Platform, Dimensions } from "react-native";
-import { IUser, THomeStackParamList } from "../../types";
 import { LocationObject } from "expo-location";
-import { UserMarker } from "./UserMarkert";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { UserMarker } from "./UserMarker";
+import { useNavigation } from "@react-navigation/native";
+import {
+  type TListOfUsers,
+  type TSearchStackNavigationProps,
+  IUser,
+} from "../../types";
 
-type TArgs = {
-  users: IUser[];
+interface IProps {
+  users: TListOfUsers;
   location: LocationObject;
   radius: number;
-};
+}
 
-type THomeScreenNavigationProp = NavigationProp<THomeStackParamList, "Map">;
-
-export function Map({ users, location, radius }: TArgs) {
+export const Map: FC<IProps> = ({ users, location, radius }) => {
   const mapViewRef = useRef<MapView>(null);
-  const navigation = useNavigation<THomeScreenNavigationProp>();
+  const navigation = useNavigation<TSearchStackNavigationProps>();
 
   useEffect(() => {
     if (mapViewRef.current) {
@@ -29,7 +31,7 @@ export function Map({ users, location, radius }: TArgs) {
   const handleMarkerPress = (user: IUser) => {
     const { location } = user;
     handleCenterMap({ latitude: location.y, longitude: location.x }, radius);
-    navigation.navigate("UserDetails", { user });
+    navigation.navigate("MapUserDetails", { user });
   };
 
   const handleCenterMap = (center: LatLng, radiusInKilometers: number) => {
@@ -60,7 +62,7 @@ export function Map({ users, location, radius }: TArgs) {
           strokeColor={"#1a66ff"}
           fillColor={"rgba(230,238,255,0.5)"}
         />
-        {users.map((user, idx) => (
+        {users.map((user) => (
           <Marker
             onPress={() => handleMarkerPress(user)}
             key={user.id}
@@ -69,12 +71,12 @@ export function Map({ users, location, radius }: TArgs) {
               longitude: user.location.x,
             }}
             title={user.fullName}
-          ></Marker>
+          />
         ))}
       </MapView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

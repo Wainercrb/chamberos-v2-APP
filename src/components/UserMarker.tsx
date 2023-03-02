@@ -1,11 +1,12 @@
+import { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { Marker, LatLng } from "react-native-maps";
 
-type TUserMarkerProps = {
+interface IProps {
   location: LatLng | null;
-};
+}
 
-export function UserMarker({ location }: TUserMarkerProps) {
+export const UserMarker: FC<IProps> = ({ location }) => {
   if (!location) return null;
 
   return (
@@ -17,7 +18,7 @@ export function UserMarker({ location }: TUserMarkerProps) {
       </View>
     </Marker>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -31,8 +32,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "rgba(0, 0, 255, 0.5)",
     backgroundColor: "rgba(0, 0, 255, 0.2)",
-    justifyContent: 'center',
-    alignItems: "center"
+    justifyContent: "center",
+    alignItems: "center",
   },
   innerCircle: {
     height: 10,

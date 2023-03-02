@@ -1,15 +1,16 @@
+import { FC } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { CONSTANTS } from "../../CONSTANTS";
 
-type TProps = {
+interface IProps {
   error?: String | FetchBaseQueryError | SerializedError | undefined;
   showCode?: boolean;
-};
+}
 
-export function ErrorFeedback({ error, showCode = false }: TProps) {
+export const ErrorFeedback: FC<IProps> = ({ error, showCode = false }) => {
   const [code, setCode] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -38,7 +39,7 @@ export function ErrorFeedback({ error, showCode = false }: TProps) {
       return;
     }
     const { status, data } = parseErrorToFetchBaseQueryError;
-    const parseDataToAny = data as any;
+    const parseDataToAny = data as any;  
 
     if (status) setCode(status.toString());
 
@@ -58,7 +59,7 @@ export function ErrorFeedback({ error, showCode = false }: TProps) {
       {message ? <Text style={styles.body}>Details: {message}</Text> : null}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   GestureResponderEvent,
   TouchableOpacity,
@@ -14,27 +14,27 @@ import {
 } from "../services/chamberosAPI";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
-import { SimpleModal } from "./Modal";
+import { ModalWrapper } from "./ModalWrapper";
 import { CustomInput } from "./CustomInput";
 import { ErrorFeedback } from "./ErrorFeedback";
 import { IconButton } from "./IconButton";
-import { IProfession } from "../../types";
 import { CONSTANTS } from "../../CONSTANTS";
+import { IProfession, type TListOfProfessions } from "../../types";
 import { AppDispatch, RootState } from "../store";
 import {
   updateProfessionName,
   setInitialize,
 } from "../store/slices/searchProfessionSlice";
 
-type TProps = {
-  closeCallbackAction: (professions: IProfession[]) => void;
+interface IProps {
+  closeCallbackAction: (professions: TListOfProfessions) => void;
   buttonLabel?: string;
-};
+}
 
-export function ProfessionModal({
+export const ProfessionModal: FC<IProps> = ({
   closeCallbackAction,
   buttonLabel = CONSTANTS.COMPONENTS.PROFESSIONAL_MODAL.INPUT_LABEL,
-}: TProps) {
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const [inputClicked, setInputClicked] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -66,7 +66,7 @@ export function ProfessionModal({
   };
 
   const changeSelectedProfessionState = (
-    professions: IProfession[],
+    professions: TListOfProfessions,
     id: string | undefined
   ) => {
     if (!id) return professions;
@@ -97,7 +97,7 @@ export function ProfessionModal({
       apiChamberos.util.updateQueryData(
         "getProfessions",
         parameters,
-        (professions: IProfession[]) => {
+        (professions: TListOfProfessions) => {
           changeSelectedProfessionState(professions, id);
         }
       )
@@ -111,7 +111,7 @@ export function ProfessionModal({
         handleAction={handleMapSearchClick}
         text={buttonLabel}
       />
-      <SimpleModal
+      <ModalWrapper
         setModalVisible={setModalOpen}
         modalVisible={modalOpen}
         childElement={
@@ -156,7 +156,7 @@ export function ProfessionModal({
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { TRootStackParamList } from "../../types";
+import { type TRootStackParamList } from "../../types";
 // Pages
 import SighInScreen from "../screens/SignInScreen";
 import SighUpScreen from "../screens/SignUpScreen";
@@ -44,7 +44,7 @@ export default function PublicLayout() {
   return (
     <NavigationContainer onReady={() => setNavigatorIsReady(true)}>
       <Stack.Navigator>
-        <Stack.Screen name={"HomeStack"} options={{ headerShown: false }}>
+        <Stack.Screen name={"PrivateStack"} options={{ headerShown: false }}>
           {(props) => {
             if (navigatorIsReady) {
               return (

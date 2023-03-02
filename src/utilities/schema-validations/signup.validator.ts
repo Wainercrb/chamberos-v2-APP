@@ -5,15 +5,20 @@ import { IUser } from "../../../types";
 export const SIGN_UP_VALIDATION_SCHEMA: Yup.Schema<IUser> = Yup.object().shape({
   fullName: Yup
     .string()
+    .min(3)
+    .max(20)
     .required(CONSTANTS.YUP.USER.FULL_NAME.REQUIRED),
   email: Yup.string()
     .email(CONSTANTS.YUP.USER.EMAIL.FORMAT)
     .required(CONSTANTS.YUP.USER.EMAIL.REQUIRED),
   password: Yup
     .string()
-    .required(CONSTANTS.YUP.USER.PASSWORD.REQUIRED),
+    .required(CONSTANTS.YUP.USER.PASSWORD.REQUIRED)
+    .matches(CONSTANTS.PASS_REGEX, CONSTANTS.YUP.USER.PASSWORD.MATCHED),
   username: Yup
     .string()
+    .min(3)
+    .max(20)
     .required(CONSTANTS.YUP.USER.USERNAME.REQUIRED),
   isActive: Yup
     .boolean()

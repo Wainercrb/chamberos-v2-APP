@@ -1,22 +1,34 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { TAuthStackParamList, THomeStackParamList } from "../../types";
 import { CONSTANTS } from "../../CONSTANTS";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  type TPrivateStackParamList,
+  type TMapStackParamList,
+} from "../../types";
 
 // Screens
 import SearchScreen from "../screens/SearchScreen";
 import SignInUserProfileScreen from "../screens/SignInUserProfileScreen";
 import MapUserDetailScreen from "../screens/MapUserDetailScreen";
 
-const Tab = createBottomTabNavigator<TAuthStackParamList>();
-const Stack = createStackNavigator<THomeStackParamList>();
+const Tab = createBottomTabNavigator<TPrivateStackParamList>();
+const Stack = createStackNavigator<TMapStackParamList>();
 
 function SearchStackScreen() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Map" component={SearchScreen} />
-      <Stack.Screen name="MapUserDetails" component={MapUserDetailScreen} />
+      <Stack.Screen
+        name="Map"
+        options={{ title: CONSTANTS.SCREENS.MAP.TITLE }}
+        component={SearchScreen}
+      />
+      <Stack.Screen
+        name="MapUserDetails"
+        
+        options={{ title: CONSTANTS.SCREENS.MAP_USER_DETAILS.TITLE }}
+        component={MapUserDetailScreen}
+      />
     </Stack.Navigator>
   );
 }

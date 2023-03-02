@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
   GestureResponderEvent,
   TouchableOpacity,
@@ -8,32 +9,28 @@ import {
 } from "react-native";
 import { CONSTANTS } from "../../CONSTANTS";
 
-type TProps = {
+interface IProps {
   label: string;
   labelLoading?: string;
   isLoading: boolean;
   onPress: (e: GestureResponderEvent) => void;
-};
+}
 
-export function LoadingButton({
+export const LoadingButton: FC<IProps> = ({
   labelLoading = CONSTANTS.COMPONENTS.LOADING_BUTTON.TEXT,
   label,
   onPress,
   isLoading,
-}: TProps) {
-  return (
-    <TouchableOpacity disabled={isLoading} onPress={onPress}>
-      <View style={styles.button}>
-        {isLoading && (
-          <ActivityIndicator size="small" color={CONSTANTS.LOADING_COLOR} />
-        )}
-        <Text style={styles.buttonText}>
-          {isLoading ? labelLoading : label}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
-}
+}) => (
+  <TouchableOpacity disabled={isLoading} onPress={onPress}>
+    <View style={styles.button}>
+      {isLoading && (
+        <ActivityIndicator size="small" color={CONSTANTS.LOADING_COLOR} />
+      )}
+      <Text style={styles.buttonText}>{isLoading ? labelLoading : label}</Text>
+    </View>
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
   button: {

@@ -12,7 +12,7 @@ import { Map } from "../components/Map";
 import { ProfessionModal } from "../components/ProfessionModal";
 import { ErrorFeedback } from "../components/ErrorFeedback";
 import { useLazyGetUsersQuery } from "../services/chamberosAPI";
-import { IProfession } from "../../types";
+import { type TListOfProfessions } from "../../types";
 import { CONSTANTS } from "../../CONSTANTS";
 
 export default function SearchScreen() {
@@ -22,7 +22,7 @@ export default function SearchScreen() {
 
   const handleTriggerUserData = (
     customRadius?: number,
-    professions?: IProfession[]
+    professions?: TListOfProfessions
   ) => {
     if (!location) return;
 
@@ -37,7 +37,7 @@ export default function SearchScreen() {
     );
   };
 
-  const getProfessionIds = (professions: IProfession[] | undefined) => {
+  const getProfessionIds = (professions: TListOfProfessions | undefined) => {
     if (!professions) return users.originalArgs?.professions ?? "";
     return professions.reduce((prev, curr) => (prev += `,${curr.id}`), "");
   };
@@ -52,7 +52,7 @@ export default function SearchScreen() {
     <View style={styles.container}>
       {location && Platform.OS !== "web" ? (
         <>
-          <Map users={users.data ?? []} location={location} radius={radius} />
+          {/* <Map users={users.data ?? []} location={location} radius={radius} /> */}
         </>
       ) : null}
       <View style={styles.professionButtonContainer}>
@@ -121,8 +121,10 @@ const styles = StyleSheet.create({
     right: "50%",
   },
   errorContainer: {
+    position: "absolute",
     top: 0,
-    left: "50%",
+    left: "25%",
+    maxWidth: "100%"
   },
   slider: {
     width: 300,

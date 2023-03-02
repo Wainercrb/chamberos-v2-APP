@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
   View,
   Text,
@@ -6,20 +7,23 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-type TArgs = {
+interface IProps {
   iconName: string;
   text: string;
   size?: number;
   handleAction: ((event: GestureResponderEvent) => void) | undefined;
-};
-
-export function IconButton({ iconName, text, handleAction, size=24 }: TArgs) {
-  return (
-    <TouchableOpacity onPress={handleAction}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Icon name={iconName} size={size} />
-        <Text style={{ fontSize: 16 }}>{text}</Text>
-      </View>
-    </TouchableOpacity>
-  );
 }
+
+export const IconButton: FC<IProps> = ({
+  iconName,
+  text,
+  handleAction,
+  size = 24,
+}) => (
+  <TouchableOpacity onPress={handleAction}>
+    <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <Icon name={iconName} size={size} />
+      <Text style={{ fontSize: 16 }}>{text}</Text>
+    </View>
+  </TouchableOpacity>
+);

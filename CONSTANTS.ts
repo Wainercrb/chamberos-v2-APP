@@ -1,6 +1,8 @@
 export const CONSTANTS = {
   // CONFIG
   LOCAL_STORAGE_KEY: "user",
+  PASS_REGEX: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
+
   // STYLES
   LOADING_COLOR: "#00ff00",
 
@@ -14,6 +16,8 @@ export const CONSTANTS = {
       },
       PASSWORD: {
         REQUIRED: "Password is required",
+        MATCHED:
+          "Password must contain at least one uppercase letter, one lowercase letter and one number",
       },
       EMAIL: {
         REQUIRED: "Email is required",
@@ -26,7 +30,7 @@ export const CONSTANTS = {
         MIN_1: "Please select min 1 role",
       },
       IS_ACTIVE: {
-        REQUIRED: "Is Active is required"
+        REQUIRED: "Is Active is required",
       },
       LOCATION: {
         REQUIRED: "Location is required",
@@ -61,40 +65,46 @@ export const CONSTANTS = {
   SCREENS: {
     SIGN_UP: {
       TITLE: "Register",
-      LOADING_LOCATION_FEEDBACK: "Please wait, we are loading your current location",
-      BUTTON_SIGN_UP: "Register"
+      LOADING_LOCATION_FEEDBACK:
+        "Please wait, we are loading your current location",
+      USER_NOT_FOUND: "User not found",
+      BUTTON_SIGN_UP: "Register",
+      BUTTON_LOG_OUT: "Log out",
     },
     SIGN_IN: {
       TITLE: "Log in",
       BUTTON_SIGN_IN: "Log in",
-      BUTTON_GO_TO_SIGN_UP: "Register"
+      BUTTON_GO_TO_SIGN_UP: "Register",
+    },
+    MAP: {
+      TITLE: "Map view",
     },
     MAP_USER_DETAILS: {
-      ERROR_GETTING_THE_USER_PROP: "Error loading the user :("
+      TITLE: "User Details",
+      ERROR_GETTING_THE_USER_PROP: "Error loading the user :(",
     },
     SIGN_IN_USER_PROFILE: {
-      TITLE: "My profile"
-    }
+      TITLE: "My profile",
+    },
   },
 
   COMPONENTS: {
     PROFESSIONAL_MODAL: {
-      INPUT_LABEL: "Search by profession"
+      INPUT_LABEL: "Search by profession",
     },
     LOADING_BUTTON: {
-      TEXT: "Loading"
+      TEXT: "Loading",
     },
     ERROR_FEEDBACK: {
-      ERROR_TITLE: "Error executing you requests!"
-    }
+      ERROR_TITLE: "Error executing you requests!",
+    },
   },
-
 
   ALERTS: {
     SUCCESS: {
       TITLE: "Successfully",
       DESCRIPTION: "Operation was executed correctly",
-      BUTTON_OK: "ok"
-    }
+      BUTTON_OK: "ok",
+    },
   },
 };

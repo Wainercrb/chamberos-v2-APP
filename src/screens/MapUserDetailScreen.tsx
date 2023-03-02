@@ -1,13 +1,14 @@
+import { FC } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { RouteProp } from "@react-navigation/native";
-import type { THomeStackParamList } from "../../types";
+import { type TMapStackParamList } from "../../types";
 import { CONSTANTS } from "../../CONSTANTS";
 
-type TScreenProps = {
-  route: RouteProp<THomeStackParamList, "MapUserDetails">;
-};
+interface IProps {
+  route: RouteProp<Pick<TMapStackParamList, "MapUserDetails">>;
+}
 
-export default function MapUserDefaultScreen({ route }: TScreenProps) {
+const MapUserDefaultScreen: FC<IProps> = ({ route }) => {
   const { user } = route.params;
 
   if (!user) {
@@ -45,7 +46,7 @@ export default function MapUserDefaultScreen({ route }: TScreenProps) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -97,3 +98,5 @@ const styles = StyleSheet.create({
     color: "#666",
   },
 });
+
+export default MapUserDefaultScreen;
