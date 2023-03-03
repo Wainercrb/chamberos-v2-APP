@@ -1,92 +1,92 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IUser, IProfession, IAuthenticateUser, type TListOfProfessions, type TListOfUsers } from "../../types";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { type IUser, type IAuthenticateUser, type TListOfProfessions, type TListOfUsers } from '../../types'
 
 // const BASE_API_URL = "http://localhost:8080"; // TODO: Move the variable to the env file
-const BASE_API_URL = "https://chamberos-api.herokuapp.com";
+const BASE_API_URL = 'https://chamberos-api.herokuapp.com'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_API_URL,
-  credentials: "include",
+  credentials: 'include',
   headers: {
-    "Content-type": "application/json; charset=UTF-8",
+    'Content-type': 'application/json; charset=UTF-8'
   },
   prepareHeaders: async (headers) => {
-    return headers;
-  },
-});
+    return headers
+  }
+})
 
 export const apiChamberos = createApi({
-  baseQuery: baseQuery,
-  tagTypes: ["Users", "Professions"],
+  baseQuery,
+  tagTypes: ['Users', 'Professions'],
   endpoints: (builder) => ({
     getUser: builder.query<
-      IUser,
-      {
-        userId: string;
-      }
+    IUser,
+    {
+      userId: string
+    }
     >({
       query: ({ userId }) => ({
-        url: "/user/get",
-        method: "get",
-        credentials: "include",
-        providesTags: ["Users"],
+        url: '/user/get',
+        method: 'get',
+        credentials: 'include',
+        providesTags: ['Users'],
         params: {
           userId
-        },
-      }),
+        }
+      })
     }),
     getUsers: builder.query<
-      TListOfUsers,
-      {
-        latitude: number;
-        longitude: number;
-        radius: number;
-        professions: string;
-      }
+    TListOfUsers,
+    {
+      latitude: number
+      longitude: number
+      radius: number
+      professions: string
+    }
     >({
       query: ({ latitude, longitude, professions, radius }) => ({
-        url: "/user/get-location-near",
-        method: "get",
-        credentials: "include",
-        providesTags: ["Users"],
+        url: '/user/get-location-near',
+        method: 'get',
+        credentials: 'include',
+        providesTags: ['Users'],
         params: {
           latitude,
           longitude,
           radiusInKilometers: radius,
-          professionIds: professions,
-        },
-      }),
+          professionIds: professions
+        }
+      })
     }),
     getProfessions: builder.query<TListOfProfessions, { professionName?: string }>({
-      query: ({ professionName = "" }) => ({
-        url: `/profession/get-all`,
-        method: "get",
-        providesTags: ["Professions"],
+      query: ({ professionName = '' }) => ({
+        url: '/profession/get-all',
+        method: 'get',
+        providesTags: ['Professions'],
         params: {
-          name: professionName,
-        },
-      }),
+          name: professionName
+        }
+      })
     }),
     createUser: builder.mutation<TListOfUsers, IUser>({
       query: (user) => ({
-        url: `/auth/register`,
-        method: "post",
-        body: JSON.stringify(user),
-      }),
+        url: '/auth/register',
+        method: 'post',
+        body: JSON.stringify(user)
+      })
     }),
     signIn: builder.mutation<
-      IAuthenticateUser,
-      Pick<IUser, "username" | "password">
+    IAuthenticateUser,
+    Pick<IUser, 'username' | 'password'>
     >({
       query: (user) => ({
-        url: `/auth/authenticate`,
-        method: "post",
+        url: '/auth/authenticate',
+        method: 'post',
         body: JSON.stringify(user),
-        credentials: "include",
-      }),
-    }),
-  }),
-});
+        credentials: 'include'
+      })
+    })
+  })
+})
 
 export const {
   endpoints,
@@ -97,4 +97,4 @@ export const {
   useGetProfessionsQuery,
   useCreateUserMutation,
   useSignInMutation
-} = apiChamberos;
+} = apiChamberos

@@ -1,64 +1,65 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
   Platform,
   View,
-  Text,
-} from "react-native";
-import { useWatchLocation } from "../hooks/useWatchLocation";
-import Slider from "@react-native-community/slider";
-import { Map } from "../components/Map";
-import { ProfessionModal } from "../components/ProfessionModal";
-import { ErrorFeedback } from "../components/ErrorFeedback";
-import { useLazyGetUsersQuery } from "../services/chamberosAPI";
-import { type TListOfProfessions } from "../../types";
-import { CONSTANTS } from "../../CONSTANTS";
+  Text
+} from 'react-native'
+import { useWatchLocation } from '../hooks/useWatchLocation'
+import Slider from '@react-native-community/slider'
+import { Map } from '../components/Map'
+import { ProfessionModal } from '../components/ProfessionModal'
+import { ErrorFeedback } from '../components/ErrorFeedback'
+import { useLazyGetUsersQuery } from '../services/chamberosAPI'
+import { type TListOfProfessions } from '../../types'
+import { CONSTANTS } from '../../CONSTANTS'
 
-export default function SearchScreen() {
-  const { location, locationError, locationMounted } = useWatchLocation();
-  const [radius, setRadius] = useState(15);
-  const [fetchUsers, users] = useLazyGetUsersQuery();
+export default function SearchScreen (): JSX.Element {
+  const { location, locationError, locationMounted } = useWatchLocation()
+  const [radius, setRadius] = useState(15)
+  const [fetchUsers, users] = useLazyGetUsersQuery()
 
   const handleTriggerUserData = (
     customRadius?: number,
     professions?: TListOfProfessions
-  ) => {
-    if (!location) return;
+  ): void => {
+    if (location === null) return
 
-    fetchUsers(
+    void fetchUsers(
       {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
         radius: customRadius ?? radius,
-        professions: getProfessionIds(professions),
+        professions: getProfessionIds(professions)
       },
       true
-    );
-  };
+    )
+  }
 
-  const getProfessionIds = (professions: TListOfProfessions | undefined) => {
-    if (!professions) return users.originalArgs?.professions ?? "";
-    return professions.reduce((prev, curr) => (prev += `,${curr.id}`), "");
-  };
+  const getProfessionIds = (professions: TListOfProfessions | undefined): string => {
+    if (professions == null) return users.originalArgs?.professions ?? ''
+    return professions
+      .reduce((prev, curr) => (prev += `,${curr.id ?? '-'}`), '')
+  }
 
   useEffect(() => {
-    if (!locationMounted) return;
+    if (!locationMounted) return
 
-    handleTriggerUserData();
-  }, [location]);
+    handleTriggerUserData()
+  }, [location])
 
   return (
     <View style={styles.container}>
-      {location && Platform.OS !== "web" ? (
-        <>
+      {(location !== null) && Platform.OS !== 'web'
+        ? <>
           {/* <Map users={users.data ?? []} location={location} radius={radius} /> */}
         </>
-      ) : null}
+        : null}
       <View style={styles.professionButtonContainer}>
         <ProfessionModal
-          closeCallbackAction={(professions) =>
-            handleTriggerUserData(undefined, professions)
+          closeCallbackAction={
+            (professions) => { handleTriggerUserData(undefined, professions) }
           }
         />
       </View>
@@ -78,59 +79,58 @@ export default function SearchScreen() {
         </Text>
       </View>
 
-      {users.isFetching ? (
-        <View style={styles.loadingContainer}>
+      {users.isFetching
+        ? <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={CONSTANTS.LOADING_COLOR} />
         </View>
-      ) : null}
-
-      {users.error || locationError ? (
-        <View style={styles.errorContainer}>
-          {users.error ? <ErrorFeedback error={users.error} /> : null}
-          {locationError ? <ErrorFeedback error={locationError} /> : null}
+        : null}
+      {(users.error !== null) || (locationError !== null)
+        ? <View style={styles.errorContainer}>
+          {(users.error !== null) ? <ErrorFeedback error={users.error} /> : null}
+          {(locationError !== null) ? <ErrorFeedback error={locationError} /> : null}
         </View>
-      ) : null}
+        : null}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   professionButtonContainer: {
-    position: "absolute",
+    position: 'absolute',
     left: 8,
     bottom: 92,
-    backgroundColor: "white",
-    borderRadius: 20,
+    backgroundColor: 'white',
+    borderRadius: 20
   },
   sliderContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 8,
     left: 8,
-    padding: 4,
+    padding: 4
   },
   radiusText: {
-    backgroundColor: "white",
-    opacity: 0.7,
+    backgroundColor: 'white',
+    opacity: 0.7
   },
   loadingContainer: {
-    position: "absolute",
-    top: "40%",
-    right: "50%",
+    position: 'absolute',
+    top: '40%',
+    right: '50%'
   },
   errorContainer: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
-    left: "25%",
-    maxWidth: "100%"
+    left: '25%',
+    maxWidth: '100%'
   },
   slider: {
     width: 300,
     opacity: 1,
     height: 50,
     marginTop: 10,
-    backgroundColor: "white",
-  },
-});
+    backgroundColor: 'white'
+  }
+})

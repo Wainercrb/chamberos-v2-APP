@@ -1,24 +1,19 @@
-import { FC } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { RouteProp } from "@react-navigation/native";
-import { type TMapStackParamList } from "../../types";
-import { CONSTANTS } from "../../CONSTANTS";
+import { StyleSheet, Text, View } from 'react-native'
+import { CONSTANTS } from '../../CONSTANTS'
+import { type FC } from 'react'
+import { type IMapUserDetailScreenProps } from '../layouts'
 
-interface IProps {
-  route: RouteProp<Pick<TMapStackParamList, "MapUserDetails">>;
-}
+const MapUserDefaultScreen: FC<IMapUserDetailScreenProps> = ({ route }) => {
+  const { user } = route.params
 
-const MapUserDefaultScreen: FC<IProps> = ({ route }) => {
-  const { user } = route.params;
-
-  if (!user) {
+  if (user === null) {
     return (
       <View style={styles.container}>
         <Text>
           {CONSTANTS.SCREENS.MAP_USER_DETAILS.ERROR_GETTING_THE_USER_PROP}
         </Text>
       </View>
-    );
+    )
   }
 
   return (
@@ -45,58 +40,58 @@ const MapUserDefaultScreen: FC<IProps> = ({ route }) => {
         </View>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20
   },
   header: {
     marginTop: 40,
-    marginBottom: 20,
+    marginBottom: 20
   },
   fullName: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold'
   },
   email: {
     fontSize: 16,
-    color: "#666",
+    color: '#666'
   },
   content: {
-    flex: 1,
+    flex: 1
   },
   professionsContainer: {
-    marginBottom: 20,
+    marginBottom: 20
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontWeight: 'bold',
+    marginBottom: 10
   },
   professionContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10
   },
   professionName: {
     fontSize: 16,
-    marginRight: 10,
+    marginRight: 10
   },
   professionRole: {
     fontSize: 16,
-    color: "#666",
+    color: '#666'
   },
   locationContainer: {
-    marginTop: 20,
+    marginTop: 20
   },
   locationText: {
     fontSize: 16,
-    color: "#666",
-  },
-});
+    color: '#666'
+  }
+})
 
-export default MapUserDefaultScreen;
+export default MapUserDefaultScreen

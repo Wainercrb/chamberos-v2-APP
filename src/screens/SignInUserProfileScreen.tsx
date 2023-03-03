@@ -1,46 +1,47 @@
-import { useState } from "react";
-import { Text, StyleSheet, View } from "react-native";
-import { useGetUserQuery } from "../services/chamberosAPI";
-import { useSelector } from "react-redux";
-import { RootState, useAppDispatch } from "../store";
-import { Loading } from "../components/Loading";
-import { LoadingButton } from "../components/LoadingButton";
-import { CONSTANTS } from "../../CONSTANTS";
-import { clearLocalStorage } from "../utilities/localStorage.utility";
+import { useState } from 'react'
+import { Text, StyleSheet, View } from 'react-native'
+import { useGetUserQuery } from '../services/chamberosAPI'
+import { useSelector } from 'react-redux'
+import { type RootState, useAppDispatch } from '../store'
+import { Loading } from '../components/Loading'
+import { LoadingButton } from '../components/LoadingButton'
+import { CONSTANTS } from '../../CONSTANTS'
+import { clearLocalStorage } from '../utilities/asyncLocalStorage'
 import {
-  LOCAL_STORAGE_KEY,
-  resetUserSession,
-} from "../store/slices/userSessionSlice";
+  resetUserSession
+} from '../store/slices/userSessionSlice'
 
-export default function SignInUserProfileScreen() {
-  const { id } = useSelector((state: RootState) => state.userSession.user);
-  const { data: user, isLoading } = useGetUserQuery({ userId: id });
-  const [signOutIsLoading, setSignOutIsLoading] = useState(false);
-  const dispatch = useAppDispatch();
+export default function SignInUserProfileScreen (): JSX.Element {
+  const { id } = useSelector((state: RootState) => state.userSession.user)
+  const { data: user, isLoading } = useGetUserQuery({ userId: id })
+  const [signOutIsLoading, setSignOutIsLoading] = useState(false)
+  const dispatch = useAppDispatch()
 
-  const handleSignOut = async () => {
+  const handleSignOut = async (): Promise<void> => {
     try {
-      setSignOutIsLoading(true);
-      dispatch(resetUserSession());
-      await clearLocalStorage(LOCAL_STORAGE_KEY);
+      setSignOutIsLoading(true)
+      dispatch(resetUserSession())
+      await clearLocalStorage(CONSTANTS.LOCAL_STORAGE_KEY)
     } catch (error) {
     } finally {
-      setSignOutIsLoading(false);
+      setSignOutIsLoading(false)
     }
-  };
+  }
 
   if (isLoading) {
-    return <Loading isFullSize />;
+    return <Loading isFullSize />
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.body}>
-        {!user ? (
+        {(user == null)
+          ? (
           <Text style={styles.title}>
             {CONSTANTS.SCREENS.SIGN_UP.USER_NOT_FOUND}
           </Text>
-        ) : (
+            )
+          : (
           <>
             <Text style={styles.title}>{user.fullName}</Text>
             <Text style={styles.subtitle}>{user.email}</Text>
@@ -67,52 +68,54 @@ export default function SignInUserProfileScreen() {
             </View>
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Is Active</Text>
-              <Text style={styles.item}>{user.isActive ? "YES" : "NO"}</Text>
+              <Text style={styles.item}>{user.isActive ? 'YES' : 'NO'}</Text>
             </View>
           </>
-        )}
+            )}
       </View>
       <View>
         <LoadingButton
           isLoading={signOutIsLoading}
           label={CONSTANTS.SCREENS.SIGN_UP.BUTTON_LOG_OUT}
-          onPress={() => handleSignOut()}
+          onPress={() => {
+            void handleSignOut()
+          }}
         />
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: "#fff",
-    flex: 1,
+    backgroundColor: '#fff',
+    flex: 1
   },
   body: {
-    flex: 1,
+    flex: 1
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontWeight: 'bold',
+    marginBottom: 10
   },
   subtitle: {
     fontSize: 16,
-    color: "#666",
-    marginBottom: 20,
+    color: '#666',
+    marginBottom: 20
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 20
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontWeight: 'bold',
+    marginBottom: 10
   },
   item: {
     fontSize: 16,
-    color: "#666",
-    marginBottom: 5,
-  },
-});
+    color: '#666',
+    marginBottom: 5
+  }
+})

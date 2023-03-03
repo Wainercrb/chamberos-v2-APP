@@ -1,26 +1,26 @@
-import { FC } from "react";
+import { type FC } from 'react'
 import {
-  GestureResponderEvent,
+  type GestureResponderEvent,
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
   Text,
-  View,
-} from "react-native";
-import { CONSTANTS } from "../../CONSTANTS";
+  View
+} from 'react-native'
+import { CONSTANTS } from '../../CONSTANTS'
 
 interface IProps {
-  label: string;
-  labelLoading?: string;
-  isLoading: boolean;
-  onPress: (e: GestureResponderEvent) => void;
+  label: string
+  labelLoading?: string
+  isLoading: boolean
+  onPress: (e: GestureResponderEvent) => void
 }
 
 export const LoadingButton: FC<IProps> = ({
   labelLoading = CONSTANTS.COMPONENTS.LOADING_BUTTON.TEXT,
   label,
   onPress,
-  isLoading,
+  isLoading
 }) => (
   <TouchableOpacity disabled={isLoading} onPress={onPress}>
     <View style={styles.button}>
@@ -30,25 +30,25 @@ export const LoadingButton: FC<IProps> = ({
       <Text style={styles.buttonText}>{isLoading ? labelLoading : label}</Text>
     </View>
   </TouchableOpacity>
-);
+)
 
 const styles = StyleSheet.create({
   button: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgb(33, 150, 243)",
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgb(33, 150, 243)',
     padding: 8,
-    borderRadius: 2,
+    borderRadius: 2
   },
   buttonText: {
-    color: "rgb(255, 255, 255)",
-    textTransform: "uppercase",
-    fontWeight: "500",
+    color: 'rgb(255, 255, 255)',
+    textTransform: 'uppercase',
+    fontWeight: '500',
     fontSize: 14,
     paddingLeft: 6,
-    paddingRight: 6,
-  },
-});
+    paddingRight: 6
+  }
+})

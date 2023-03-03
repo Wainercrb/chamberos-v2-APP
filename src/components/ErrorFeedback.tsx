@@ -1,76 +1,79 @@
-import { FC } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
-import { SerializedError } from "@reduxjs/toolkit";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
-import { CONSTANTS } from "../../CONSTANTS";
+import { type FC, useEffect, useState } from 'react'
+import { View, Text, StyleSheet } from 'react-native'
+import { type SerializedError } from '@reduxjs/toolkit'
+import { type FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
+import { CONSTANTS } from '../../CONSTANTS'
 
 interface IProps {
-  error?: String | FetchBaseQueryError | SerializedError | undefined;
-  showCode?: boolean;
+  error?: string | FetchBaseQueryError | SerializedError | undefined
+  showCode?: boolean
 }
 
 export const ErrorFeedback: FC<IProps> = ({ error, showCode = false }) => {
-  const [code, setCode] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const [code, setCode] = useState<string | null>(null)
+  const [message, setMessage] = useState<string | null>(null)
 
   useEffect(() => {
-    if (typeof error === "string") {
-      setMessage(error);
-      return;
+    if (typeof error === 'string') {
+      setMessage(error)
+      return
     }
 
-    const parseErrorToSerializedError = error as SerializedError;
+    const parseErrorToSerializedError = error as SerializedError
     if (
-      parseErrorToSerializedError?.code &&
-      parseErrorToSerializedError?.message
+      ((parseErrorToSerializedError?.code) !== undefined) &&
+      ((parseErrorToSerializedError?.message) !== undefined)
     ) {
-      setCode(parseErrorToSerializedError.code);
-      setMessage(parseErrorToSerializedError.message);
-      return;
+      setCode(parseErrorToSerializedError.code)
+      setMessage(parseErrorToSerializedError.message)
+      return
     }
 
-    const parseErrorToFetchBaseQueryError = error as FetchBaseQueryError;
+    const parseErrorToFetchBaseQueryError = error as FetchBaseQueryError
 
     if (
-      !parseErrorToFetchBaseQueryError?.data &&
-      !parseErrorToFetchBaseQueryError?.status
+      parseErrorToFetchBaseQueryError?.data === undefined ||
+      parseErrorToFetchBaseQueryError?.status === undefined
     ) {
-      return;
+      return
     }
-    const { status, data } = parseErrorToFetchBaseQueryError;
-    const parseDataToAny = data as any;  
+    const { status, data } = parseErrorToFetchBaseQueryError
+    const parseDataToAny = data as any
 
-    if (status) setCode(status.toString());
+    if (status !== null) setCode(status.toString())
 
-    if (parseDataToAny.error) {
-      setMessage(parseDataToAny.error ?? null);
+    if (parseDataToAny?.error !== null) {
+      setMessage(parseDataToAny.error ?? null)
     }
-  }, [error]);
+  }, [error])
 
   return (
-    <View style={code && message ? styles.container : {}}>
-      {code || message ? (
-        <Text style={styles.title}>
-          {CONSTANTS.COMPONENTS.ERROR_FEEDBACK.ERROR_TITLE}
-        </Text>
-      ) : null}
-      {code && showCode ? <Text style={styles.body}>Code: {code}</Text> : null}
-      {message ? <Text style={styles.body}>Details: {message}</Text> : null}
+    <View style={(code !== null) && (message !== null) ? styles.container : {}}>
+      {(code !== null) || (message !== null)
+        ? (
+          <Text style={styles.title}>
+            {CONSTANTS.COMPONENTS.ERROR_FEEDBACK.ERROR_TITLE}
+          </Text>
+          )
+        : null}
+
+      {(code !== null) && !showCode ? <Text style={styles.body}>Code: {code}</Text> : null}
+
+      {(message !== null) ? <Text style={styles.body}>Details: {message}</Text> : null}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     paddingTop: 16,
-    paddingButton: 16,
+    paddingButton: 16
   },
   title: {
     marginBottom: 4,
-    color: "red",
+    color: 'red'
   },
   body: {
-    color: "#9d1919",
-  },
-});
+    color: '#9d1919'
+  }
+})

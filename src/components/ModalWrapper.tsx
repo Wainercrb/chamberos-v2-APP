@@ -1,17 +1,17 @@
-import { FC } from "react";
-import { Modal, StyleSheet, View } from "react-native";
-import { IconButton } from "./IconButton";
+import { type FC } from 'react'
+import { Modal, StyleSheet, View } from 'react-native'
+import { IconButton } from './IconButton'
 
 interface IProps {
-  modalVisible: boolean;
-  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  childElement: JSX.Element;
+  modalVisible: boolean
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>
+  childElement: JSX.Element
 }
 
 export const ModalWrapper: FC<IProps> = ({
   modalVisible,
   setModalVisible,
-  childElement,
+  childElement
 }) => (
   <View>
     <Modal
@@ -19,7 +19,7 @@ export const ModalWrapper: FC<IProps> = ({
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => {
-        setModalVisible(!modalVisible);
+        setModalVisible(!modalVisible)
       }}
     >
       <View style={styles.body}>
@@ -30,7 +30,7 @@ export const ModalWrapper: FC<IProps> = ({
               iconName="close"
               size={36}
               handleAction={() => {
-                setModalVisible(!modalVisible);
+                setModalVisible(!modalVisible)
               }}
             />
           </View>
@@ -39,24 +39,24 @@ export const ModalWrapper: FC<IProps> = ({
       </View>
     </Modal>
   </View>
-);
+)
 
 const styles = StyleSheet.create({
   header: {
     // height: "30",
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
   },
   body: {
-    width: "100%",
-    height: "100%",
-    padding: 23,
+    width: '100%',
+    height: '100%',
+    padding: 23
   },
   main: {
     padding: 16,
-    backgroundColor: "rgb(255, 255, 255)",
-    width: "100%",
-    height: "100%",
-  },
-});
+    backgroundColor: 'rgb(255, 255, 255)',
+    width: '100%',
+    height: '100%'
+  }
+})

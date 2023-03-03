@@ -1,63 +1,47 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  clearLocalStorage,
-  persistLocalStorage,
-} from "../../utilities/localStorage.utility";
-import { IAuthenticateUser } from "../../../types";
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { type IAuthenticateUser } from '../../../types'
 
-export const LOCAL_STORAGE_KEY = "user";
 const USER_EMPTY_STATE: IAuthenticateUser = {
-  email: "",
-  username: "",
-  accountNonExpired: false,
-  accountNonLocked: false,
+  id: '',
+  email: '',
+  username: '',
   authorities: [],
-  credentialsNonExpired: false,
   enabled: false,
-  id: "",
   isInitialized: false,
-};
-
-// const buildAndGetInitialState = (): IAuthenticateUser => {
-//   if (!localStorage.getItem(LOCAL_STORAGE_KEY)) {
-//     return USER_EMPTY_STATE;
-//   }
-//   return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) as string);
-// };
+  accountNonLocked: false,
+  accountNonExpired: false,
+  credentialsNonExpired: false
+}
 
 export const userSessionSlice = createSlice({
-  name: "userSession",
+  name: 'userSession',
   initialState: {
-    user: USER_EMPTY_STATE,
+    user: USER_EMPTY_STATE
   },
   reducers: {
     createUserSession: (state, action: PayloadAction<IAuthenticateUser>) => {
-      // persistLocalStorage<IAuthenticateUser>(LOCAL_STORAGE_KEY, action.payload);
-      state.user = action.payload;
+      state.user = action.payload
     },
-
     initializeUserSession: (
       state,
       action: PayloadAction<IAuthenticateUser>
     ) => {
-      // persistLocalStorage<IAuthenticateUser>(LOCAL_STORAGE_KEY, action.payload);
-      state.user = action.payload;
+      state.user = action.payload
     },
     updateUserSession: (state, action: PayloadAction<IAuthenticateUser>) => {
-      // persistLocalStorage<IAuthenticateUser>(LOCAL_STORAGE_KEY, result);
-      state = { ...state, ...action.payload };
+      state = { ...state, ...action.payload }
     },
     resetUserSession: (state) => {
-      state.user = USER_EMPTY_STATE;
-    },
-  },
-});
+      state.user = USER_EMPTY_STATE
+    }
+  }
+})
 
 export const {
   createUserSession,
   updateUserSession,
   resetUserSession,
-  initializeUserSession,
-} = userSessionSlice.actions;
+  initializeUserSession
+} = userSessionSlice.actions
 
-export default userSessionSlice.reducer;
+export default userSessionSlice.reducer

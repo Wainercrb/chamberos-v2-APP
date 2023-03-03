@@ -1,6 +1,6 @@
-import * as Yup from "yup";
-import { CONSTANTS } from "../../../CONSTANTS";
-import { IUser } from "../../../types";
+import * as Yup from 'yup'
+import { CONSTANTS } from '../../../CONSTANTS'
+import { type IUser } from '../../../types'
 
 export const SIGN_UP_VALIDATION_SCHEMA: Yup.Schema<IUser> = Yup.object().shape({
   fullName: Yup
@@ -22,7 +22,7 @@ export const SIGN_UP_VALIDATION_SCHEMA: Yup.Schema<IUser> = Yup.object().shape({
     .required(CONSTANTS.YUP.USER.USERNAME.REQUIRED),
   isActive: Yup
     .boolean()
-    .required(CONSTANTS.YUP.USER.USERNAME.REQUIRED),  
+    .required(CONSTANTS.YUP.USER.USERNAME.REQUIRED),
   professions: Yup
     .array()
     .required()
@@ -31,7 +31,7 @@ export const SIGN_UP_VALIDATION_SCHEMA: Yup.Schema<IUser> = Yup.object().shape({
       Yup.object().shape({
         name: Yup
           .string()
-          .required(CONSTANTS.YUP.ROLES.NAME.REQUIRED),
+          .required(CONSTANTS.YUP.ROLES.NAME.REQUIRED)
         // type: Yup.string()
         //   .oneOf(["FULLTIME", "TEMPORAL"], CONSTANTS.YUP.ROLES.NAME.REQUIRED)
         //   .required(CONSTANTS.YUP.ROLES.NAME.REQUIRED),
@@ -50,7 +50,7 @@ export const SIGN_UP_VALIDATION_SCHEMA: Yup.Schema<IUser> = Yup.object().shape({
           .string()
           .required(
             CONSTANTS.YUP.PROFESSIONS.DESCRIPTION.REQUIRED
-          ),
+          )
       })
     ),
   location: Yup.object().shape({
@@ -59,6 +59,6 @@ export const SIGN_UP_VALIDATION_SCHEMA: Yup.Schema<IUser> = Yup.object().shape({
       .required(CONSTANTS.YUP.USER.LOCATION.X),
     y: Yup
       .number()
-      .required(CONSTANTS.YUP.USER.LOCATION.Y),
-  }),
-});
+      .required(CONSTANTS.YUP.USER.LOCATION.Y)
+  })
+})

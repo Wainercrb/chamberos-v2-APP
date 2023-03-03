@@ -1,37 +1,30 @@
-import { FC, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { NavigationProp, StackActions } from "@react-navigation/native";
-import { RootState } from "../store";
-import { type TRootStackParamList } from "../../types";
+import { type FC, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { StackActions } from '@react-navigation/native'
+import { type RootState } from '../store'
+import { type IPrivateScreenProps } from '../layouts'
 
-interface IProps {
-  navigation: NavigationProp<TRootStackParamList>;
-  Component: () => JSX.Element;
-  allowedRoles: string[];
-  redirectTo: keyof TRootStackParamList;
-}
-
-const ProtectedScreen: FC<IProps> = ({
+const ProtectedScreen: FC<IPrivateScreenProps> = ({
   Component,
   navigation,
   allowedRoles,
-  redirectTo,
+  redirectTo
 }) => {
-  const { user } = useSelector(({ userSession }: RootState) => userSession);
+  const { user } = useSelector(({ userSession }: RootState) => userSession)
 
-  const userHasAccess = () => {
-    const authorities = Array.isArray(user.authorities) ? user.authorities : [];
-    const flatRoles = authorities.flatMap(({ authority }) => authority);
-    return allowedRoles.every((role) => flatRoles.includes(role));
-  };
+  const userHasAccess = (): boolean => {
+    const authorities = Array.isArray(user.authorities) ? user.authorities : []
+    const flatRoles = authorities.flatMap(({ authority }) => authority)
+    return allowedRoles.every((role) => flatRoles.includes(role))
+  }
 
   useEffect(() => {
     if (!userHasAccess()) {
-      navigation.dispatch(StackActions.replace(redirectTo));
+      navigation.dispatch(StackActions.replace(redirectTo))
     }
-  }, [user]);
+  }, [user])
 
-  return <Component />;
-};
+  return <Component />
+}
 
-export default ProtectedScreen;
+export default ProtectedScreen
